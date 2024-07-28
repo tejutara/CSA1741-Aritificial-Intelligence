@@ -1,0 +1,40 @@
+% Define symptoms and their associated diagnoses
+% Example: diagnose(Diagnosis, [Symptom1, Symptom2, ...])
+
+% Facts
+has_symptom(patient1, fever).
+has_symptom(patient1, cough).
+has_symptom(patient1, sore_throat).
+
+has_symptom(patient2, fever).
+has_symptom(patient2, rash).
+
+has_symptom(patient3, headache).
+has_symptom(patient3, nausea).
+
+% Rules
+diagnose(flu, [fever, cough, sore_throat]) :-
+    has_symptom(patient1, fever),
+    has_symptom(patient1, cough),
+    has_symptom(patient1, sore_throat).
+
+diagnose(measles, [fever, rash]) :-
+    has_symptom(patient2, fever),
+    has_symptom(patient2, rash).
+
+diagnose(migraine, [headache, nausea]) :-
+    has_symptom(patient3, headache),
+    has_symptom(patient3, nausea).
+
+% Querying the diagnosis for a patient
+query_diagnosis(Patient, Diagnosis) :-
+    findall(Diagnosis, (diagnose(Diagnosis, Symptoms), all_symptoms_present(Patient, Symptoms)), Diagnoses),
+    member(Diagnosis, Diagnoses).
+
+% Helper to check if all symptoms are present
+all_symptoms_present(Patient, Symptoms) :-
+    maplist(has_symptom(Patient), Symptoms).
+
+% Example usage
+% ?- query_diagnosis(patient1, Diagnosis).
+% Diagnosis = flu.
